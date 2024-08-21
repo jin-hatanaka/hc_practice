@@ -11,7 +11,7 @@ require 'optparse'
 
 def calendar(year, month)
   # 指定した月の1日と最終日を指定します
-  month_start_day = Date.new(year, month, +1)
+  month_start_day = Date.new(year, month, 1)
   month_end_day = Date.new(year, month, -1)
 
   # カレンダーのヘッダーを表示
@@ -26,15 +26,11 @@ def calendar(year, month)
   (month_start_day..month_end_day).each do |d|
     # 日曜日で改行
     if d.sunday?
-      # 日にちが1桁の時は数字の前にスペース＆各、日にちの間にスペース
-      next puts " #{d.day} " if d.day <= 9
-      
-      puts "#{d.day}"
+      # 2桁右詰めで出力
+      puts d.day.to_s.rjust(2)
     else
-      next print " #{d.day} " if d.day <= 9  
-      
-      # 各、日にちの間にスペース
-      print "#{d.day} "
+      # 2桁右詰めで出力＆各、日にちの間にスペース
+      print "#{d.day.to_s.rjust(2)} "
     end
   end
   puts
