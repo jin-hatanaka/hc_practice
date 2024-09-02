@@ -3,6 +3,16 @@
 hole = gets.split(',').map(&:to_i)
 player = gets.split(',').map(&:to_i)
 
+# スコアに応じた呼び名のハッシュを定義
+SCORE_MAPPING = {
+  -4 => 'コンドル',
+  -3 => 'アルバトロス',
+  -2 => 'イーグル',
+  -1 => 'バーディ',
+  0 => 'パー',
+  1 => 'ボギー'
+}
+
 score_name = []
 
 # 2つの配列を同時にループさせる
@@ -11,22 +21,12 @@ hole.zip(player) do |hole, player|
   score = player - hole
 
   # スコアに応じた呼び名を変数に格納
-  if score == 1
-    score_name << 'ボギー'
-  elsif score >= 2
+  if score >= 2
     score_name << "#{score}ボギー"
-  elsif score.zero?
-    score_name << 'パー'
-  elsif score == -1
-    score_name << 'バーディ'
-  elsif score == -2 && player != 1
-    score_name << 'イーグル'
-  elsif score == -3 && player != 1
-    score_name << 'アルバトロス'
-  elsif score == -4 
-    score_name << 'コンドル'
-  elsif player == 1
+  elsif player == 1 && score != -4
     score_name << 'ホールインワン'
+  else
+    score_name << SCORE_MAPPING[score]
   end
 end
 
