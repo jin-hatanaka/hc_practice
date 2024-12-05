@@ -50,9 +50,13 @@ while true
     puts "--------------------------------------------"
 
     selected_juice = juices[juice_number]
+    # 在庫を取得し、selected_stockに代入する
+    selected_stock = vending_machine.get_stock(selected_juice)
 
     # 入力情報を元に購入処理をする
-    vending_machine.buy(suica, selected_juice)
+    vending_machine.buy(suica, selected_juice, selected_stock)
+    # 入力情報を元に在庫を減らす処理をする
+    vending_machine.reduce_stock(selected_juice)
 
     puts "#{selected_juice.name}を購入しました(残高: #{suica.balance})"
     puts "現在の売上金額: #{vending_machine.total_sales}"
@@ -72,8 +76,8 @@ while true
     restock_number = gets.chomp.to_i
     puts "--------------------------------------------"
 
-    # 入力情報を元に在庫処理をする
-    selected_juice.restock(restock_number)
+    # 入力情報を元に在庫を補充する処理をする
+    vending_machine.restock(selected_juice, restock_number)
 
     puts "#{selected_juice.name}を#{restock_number}本補充しました"
 
