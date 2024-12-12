@@ -34,27 +34,24 @@ while true
 
   elsif number == 1
     # ジュースの情報を表示
-    vending_machine.show_juices
+    puts vending_machine.show_juices
 
     puts
     print "購入するジュースの番号を入力してください > "
     juice_number = gets.chomp.to_i
     puts "--------------------------------------------"
 
-    # 在庫を取得し、selected_stockに代入する
-    selected_stock = vending_machine.get_stock(juice_number)
-
     # 入力情報を元に購入処理をする
-    vending_machine.buy(suica, juice_number, selected_stock)
+    vending_machine.buy(suica, juice_number)
     # 入力情報を元に在庫を減らす処理をする
     vending_machine.reduce_stock(juice_number)
 
-    puts "#{vending_machine.stocks[juice_number].name}を購入しました(残高: #{suica.balance})"
+    puts "#{vending_machine.get_name(juice_number)}を購入しました(残高: #{suica.balance})"
     puts "現在の売上金額: #{vending_machine.total_sales}"
 
   elsif number == 2
     # ジュースの情報を表示
-    vending_machine.show_juices
+    puts vending_machine.show_juices
 
     puts
     print "在庫を補充するジュースの番号を入力してください > "
@@ -68,7 +65,7 @@ while true
     # 入力情報を元に在庫を補充する処理をする
     vending_machine.restock(juice_number, restock_number)
 
-    puts "#{vending_machine.stocks[juice_number].name}を#{restock_number}本補充しました"
+    puts "#{vending_machine.get_name(juice_number)}を#{restock_number}本補充しました"
 
   elsif number == 3
     break
