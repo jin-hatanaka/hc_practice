@@ -5,82 +5,55 @@ class VendingMachine
   #stocksというインスタンス変数に、Juiceインスタンスを要素に持つ配列を定義
   def initialize
     @total_sales = 0
-    @stocks = [Juice.new(name: "ペプシ(150円)", price: 150), Juice.new(name: "ペプシ(150円)", price: 150), Juice.new(name: "ペプシ(150円)", price: 150), Juice.new(name: "ペプシ(150円)", price: 150), Juice.new(name: "ペプシ(150円)", price: 150), 
-               Juice.new(name: "モンスター(230円)", price: 230), Juice.new(name: "モンスター(230円)", price: 230), Juice.new(name: "モンスター(230円)", price: 230), Juice.new(name: "モンスター(230円)", price: 230), Juice.new(name: "モンスター(230円)", price: 230), 
-               Juice.new(name: "いろはす(120円)", price: 120), Juice.new(name: "いろはす(120円)", price: 120), Juice.new(name: "いろはす(120円)", price: 120), Juice.new(name: "いろはす(120円)", price: 120), Juice.new(name: "いろはす(120円)", price: 120)]
+    @stocks = []
+    5.times do
+      @stocks << Juice.new(name: "ペプシ(150円)", price: 150)
+      @stocks << Juice.new(name: "モンスター(230円)", price: 230)
+      @stocks << Juice.new(name: "いろはす(120円)", price: 120)
+    end
   end
 
   # ジュースの情報を表示
   def show_juices
-    "0. ペプシ(150円) 残り#{get_stock(0)}本\n" +
-    "1. モンスター(230円) 残り#{get_stock(1)}本\n" +
-    "2. いろはす(120円) 残り#{get_stock(2)}本"
+    @stocks.uniq { |stock| stock.name }.each do |s|
+      puts "- #{s.name} 残り#{@stocks.select do |stock| stock.name == s.name end.size}本"
+    end
   end
 
   # チャージ残高、在庫からジュースを購入できるか判断
-  def juice_buy?(suica, juice_number)
-    suica.balance >= get_price(juice_number) && get_stock(juice_number) > 0
+  def juice_buy?(suica, juice_name)
+    get_stock(juice_name) > 0 && suica.balance >= get_price(juice_name)
   end
 
   # 購入処理
-  def buy(suica, juice_number)
-    raise "チャージ残高または在庫が足りません" unless juice_buy?(suica, juice_number)
-
-    @total_sales += get_price(juice_number)
-    suica.pay(get_price(juice_number))
+  def buy(suica, juice_name)
+    raise "チャージ残高または在庫が足りません" unless juice_buy?(suica, juice_name)
+    
+    # 売上金額を増やす
+    @total_sales += get_price(juice_name)
+    # Suicaのチャージ残高を減らす
+    suica.pay(get_price(juice_name))
+    # 在庫を減らす
+    @stocks.delete_at(@stocks.index { |stock| stock.name == juice_name })
   end
 
   # 在庫を取得する関数を定義
-  def get_stock(juice_number)
-    if juice_number == 0
-      @stocks.select { |juice| juice.name == "ペプシ(150円)" }.size
-    elsif juice_number == 1
-      @stocks.select { |juice| juice.name == "モンスター(230円)" }.size
-    elsif juice_number == 2
-      @stocks.select { |juice| juice.name == "いろはす(120円)" }.size
-    end
+  def get_stock(juice_name)
+    @stocks.select { |stock| stock.name == juice_name }.size
   end
 
   #値段を取得する関数を定義
-  def get_price(juice_number)
-    if juice_number == 0
-      150
-    elsif juice_number == 1
-      230
-    elsif juice_number == 2
-      120
-    end
-  end
-
-  #名前を取得する関数を定義
-  def get_name(juice_number)
-    if juice_number == 0
-      "ペプシ(150円)"
-    elsif juice_number == 1
-      "モンスター(230円)"
-    elsif juice_number == 2
-      "いろはす(120円)"
-    end
-  end
-
-  # 在庫を減らす関数を定義
-  def reduce_stock(juice_number)
-    if juice_number == 0
-      @stocks.delete_at(@stocks.index { |stock| stock.name == "ペプシ(150円)" })
-    elsif juice_number == 1
-      @stocks.delete_at(@stocks.index { |stock| stock.name == "モンスター(230円)" })
-    elsif juice_number == 2
-      @stocks.delete_at(@stocks.index { |stock| stock.name == "いろはす(120円)" })
-    end
+  def get_price(juice_name)
+    @stocks.find { |stock| stock.name == juice_name }.price
   end
 
   # 在庫を補充する関数を定義
-  def restock(juice_number, restock_number)
-    if juice_number == 0
+  def restock(juice_name, restock_number)
+    if juice_name == "ペプシ(150円)"
       restock_number.times { @stocks << Juice.new(name: "ペプシ(150円)", price: 150) }
-    elsif juice_number == 1
+    elsif juice_name == "モンスター(230円)"
       restock_number.times { @stocks << Juice.new(name: "モンスター(230円)", price: 230) }
-    elsif juice_number == 2
+    elsif juice_name == "いろはす(120円)"
       restock_number.times { @stocks << Juice.new(name: "いろはす(120円)", price: 120) }
     end
   end

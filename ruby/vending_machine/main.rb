@@ -34,38 +34,54 @@ while true
 
   elsif number == 1
     # ジュースの情報を表示
-    puts vending_machine.show_juices
+    vending_machine.show_juices
 
     puts
-    print "購入するジュースの番号を入力してください > "
-    juice_number = gets.chomp.to_i
+    puts "(ペプシ:pe モンスター:mo いろはす:ir)"
+    print "購入するジュースの名前を入力してください > "
+    pre_juice_name = gets.chomp
     puts "--------------------------------------------"
 
-    # 入力情報を元に購入処理をする
-    vending_machine.buy(suica, juice_number)
-    # 入力情報を元に在庫を減らす処理をする
-    vending_machine.reduce_stock(juice_number)
+    if pre_juice_name == "pe"
+      juice_name = "ペプシ(150円)"
+    elsif pre_juice_name == "mo"
+      juice_name = "モンスター(230円)"
+    elsif pre_juice_name == "ir"
+      juice_name = "いろはす(120円)"
+    end
 
-    puts "#{vending_machine.get_name(juice_number)}を購入しました(残高: #{suica.balance})"
+    # 入力情報を元に購入処理をする
+    vending_machine.buy(suica, juice_name)
+
+    puts "#{juice_name}を購入しました(残高: #{suica.balance})"
     puts "現在の売上金額: #{vending_machine.total_sales}"
 
   elsif number == 2
     # ジュースの情報を表示
-    puts vending_machine.show_juices
+    vending_machine.show_juices
 
     puts
-    print "在庫を補充するジュースの番号を入力してください > "
-    juice_number = gets.chomp.to_i
+    puts "(ペプシ:pe モンスター:mo いろはす:ir)"
+    print "在庫を補充するジュースの名前を入力してください > "
+    pre_juice_name = gets.chomp
     puts "--------------------------------------------"
 
     print "補充する本数を入力してください > "
     restock_number = gets.chomp.to_i
     puts "--------------------------------------------"
 
-    # 入力情報を元に在庫を補充する処理をする
-    vending_machine.restock(juice_number, restock_number)
+    if pre_juice_name == "pe"
+      juice_name = "ペプシ(150円)"
+    elsif pre_juice_name == "mo"
+      juice_name = "モンスター(230円)"
+    elsif pre_juice_name == "ir"
+      juice_name = "いろはす(120円)"
+    end
 
-    puts "#{vending_machine.get_name(juice_number)}を#{restock_number}本補充しました"
+    # 入力情報を元に在庫を補充する処理をする
+    vending_machine.restock(juice_name, restock_number)
+
+    puts "#{juice_name}を#{restock_number}本補充しました"
 
   elsif number == 3
     break
